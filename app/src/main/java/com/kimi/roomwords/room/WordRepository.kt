@@ -10,7 +10,6 @@ class WordRepository(private val wordDao: WordDao) {
 
     val allWords: LiveData<List<Word>> = wordDao.getAlphabetizedWords()
 
-
     fun insert(word: Word) {
         AsyncTask.execute {
             wordDao.insert(word = word)

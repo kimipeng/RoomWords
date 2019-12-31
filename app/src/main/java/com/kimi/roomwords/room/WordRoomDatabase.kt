@@ -7,6 +7,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -33,21 +35,19 @@ abstract class WordRoomDatabase : RoomDatabase(){
             Log.d("kimi", "onOpen: db")
 
             INSTANCE?.let {
-                scope.launch {
+                scope.launch(Dispatchers.IO) {
                     populateDatabase(it.wordDao())
                 }
             }
         }
 
-        fun populateDatabase(wordDao: WordDao) {
+        suspend fun populateDatabase(wordDao: WordDao) {
 
             wordDao.deleteAll()
-
             var word = Word("Hello")
             wordDao.insert(word)
             word = Word("World")
             wordDao.insert(word)
-
         }
 
 

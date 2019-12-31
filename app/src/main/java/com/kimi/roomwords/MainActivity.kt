@@ -1,16 +1,28 @@
 package com.kimi.roomwords
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.kimi.roomwords.room.Word
 import com.kimi.roomwords.view.WordListAdapter
+import com.kimi.roomwords.view.WordViewModel
 
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlin.math.log
 
 class MainActivity : AppCompatActivity() {
+
+    private val newWordActivityRequestCode = 1
+    private lateinit var wordViewModel: WordViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,11 +35,38 @@ class MainActivity : AppCompatActivity() {
             this.adapter = adapter
         }
 
+        wordViewModel = ViewModelProvider(this).get(WordViewModel::class.java)
+        wordViewModel.allWords.observe(this, Observer { words ->
+
+            words?.let {
+                adapter.setWords(it)
+            }
+        })
+
 
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            val intent = Intent(this@MainActivity, NewWordActivity::class.java)
+            startActivityForResult(intent, newWordActivityRequestCode)
+        }
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == newWordActivityRequestCode && resultCode == Activity.RESULT_OK) {
+            data?.getStringExtra(NewWordActivity.EXTRA_REPLY)?.let {
+                val word = Word(it)
+                wordViewModel.insert(word)
+            }
+        } else {
+            Toast.makeText(
+                applicationContext,
+                R.string.empty_not_saved,
+                Toast.LENGTH_LONG
+            ).show()
+
         }
 
     }
