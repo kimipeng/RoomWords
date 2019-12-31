@@ -15,6 +15,6 @@ class Word(
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "word")
-    var mWord: String
+    var word: String
 
 )

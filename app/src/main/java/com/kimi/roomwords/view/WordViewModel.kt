@@ -1,4 +1,4 @@
-package com.kimi.roomwords
+package com.kimi.roomwords.view
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -20,7 +20,7 @@ class WordViewModel(application: Application) : AndroidViewModel(application) {
 
 
     init {
-        val wordsDao = WordRoomDatabase.getInstance(application).wordDao()
+        val wordsDao = WordRoomDatabase.getInstance(application, viewModelScope).wordDao()
 
         repository = WordRepository(wordsDao)
         allWords = repository.allWords

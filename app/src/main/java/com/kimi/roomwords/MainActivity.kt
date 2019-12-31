@@ -5,6 +5,8 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.kimi.roomwords.view.WordListAdapter
 
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -13,14 +15,20 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
+
+
+        val adapter = WordListAdapter(this)
+        recyclerview.apply {
+            this.layoutManager = LinearLayoutManager(this@MainActivity)
+            this.adapter = adapter
+        }
+
+
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
-
-
 
     }
 
